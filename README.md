@@ -9,6 +9,10 @@ Um das Skript auszuführen, werden folgende Programme benötigt:
 Das Skript wird ohne Parameter aufgerufen, also einfach z. B.
 
     python3 make_pw_list.py
+oder sogar nur
+
+    make_pw_list.py
+unter Unix.
 
 Es werden immer Passwortlisten für das gesamte aktuelle und nächste Semester
 im `.txt`-, `.tex`- und `.pdf`-Format im aktuellen Ordner erzeugt.
