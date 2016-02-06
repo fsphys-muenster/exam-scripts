@@ -138,7 +138,7 @@ fi
 	--encryptionType aes_128 \
 	--allow print copy modifyannotations fill screenreaders assembly degradedprinting \
 	--userPassword "$user_pw" \
-	--adminstratorPassword "$admin_pw" \
+	--administratorPassword "$admin_pw" \
 	--files "/tmp/$output_name" --output "$output_dir"
 status=$?
 rm "/tmp/$output_name"
