@@ -1,11 +1,9 @@
 #!/bin/sh
-# Author: Simon May
-# Date: 2015-03-13
 # Merges & encrypts the PDF files in the directory in #1; output file name in #2;
 #     lecture name in #3; admin PW in #4
 
 lecture_list=''
-for i in 'Physik1' 'Physik2' 'Physik3' 'Physik4' 'Physik5' 'Physik6' 'Mathe1' 'Mathe2' 'Mathe3' 'Mathe4' 'CP' 'Chemie' 'Informatik'; do
+for i in 'Physik1' 'Physik2' 'Physik3' 'Physik4' 'Physik5' 'Physik6' 'Mathe1' 'Mathe2' 'Mathe3' 'Mathe4' 'CP' 'Chemie' 'Informatik' 'PhysikA'; do
 	lecture_list="$lecture_list    $i\n"
 done
 # check if all required arguments are set
@@ -15,8 +13,8 @@ if [ -z ${1+x} ] || [ -z ${2+x} ] || [ -z ${3+x} ]; then
 	echo ' Parameter #1: Ordner, der die PDF-Dateien enthält'
 	echo ' Parameter #2: Pfad für die Ausgabedatei'
 	echo ' Parameter #3: Um welche Vorlesung geht es? Mögliche Werte:'
-	echo ' Parameter #4: Admin-Passwort für die PDF-Datei'
 	echo "$lecture_list"
+	echo ' Parameter #4: Admin-Passwort für die PDF-Datei'
 	exit 0
 fi
 
@@ -95,6 +93,11 @@ case $lecture in
 		lecture_subject='Informatik'
 		lecture_keywords='Physik, Klausur, Klausuren, Scans, Informatik'
 		;;
+	'PhysikA')
+		lecture_title='Altklausuren zu Physik A'
+		lecture_subject='Physik A: Physik für Naturwissenschaftler'
+		lecture_keywords='Physik, Klausur, Klausuren, Scans, Nebenfach'
+		;;
 	*)
 		echo 'Die Vorlesung "'"$lecture"'" ist nicht bekannt!'
 		echo 'Mögliche Werte sind:'
@@ -113,6 +116,7 @@ if [ $status -ne 0 ]; then
 	exit 1
 fi
 
+# Add FSPHYS logo stamp on background of every page in merged PDF file
 pdftk "/tmp/$output_name"'_1.pdf' stamp 'FS_logo_stamp.pdf' output "/tmp/$output_name"
 status=$?
 rm "/tmp/$output_name"'_1.pdf'
@@ -121,6 +125,7 @@ if [ $status -ne 0 ]; then
 	exit 1
 fi
 
+# Set metadata on merged (& stamped) PDF file
 "$sejda_path"sejda-console setmetadata \
 	--title "$lecture_title" \
 	--subject "$lecture_subject" \
@@ -134,6 +139,7 @@ if [ $status -ne 0 ]; then
 	exit 1
 fi
 
+# Encrypt merged PDF file (set user & admin PW)
 "$sejda_path"sejda-console encrypt \
 	--encryptionType aes_128 \
 	--allow print copy modifyannotations fill screenreaders assembly degradedprinting \

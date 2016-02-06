@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-# Author: Simon May
-# Date: 2015-03-12
 import datetime
-from dateutil.relativedelta import *
 import glob
 import math
 import os
 import random
 import string
+from dateutil.relativedelta import *
 
 def is_ss(date):
 	return date.month in range(4, 10)
@@ -31,10 +29,12 @@ else:
 # start date is Monday before the start of the semester
 date_start_this = date_start + relativedelta(weekday=MO(-1))
 date_end_this = date_start + relativedelta(months=6)
-date_end_this = datetime.date(date_end_this.year, date_end_this.month, 1) + relativedelta(weekday=MO(+1))
+date_end_this = datetime.date(date_end_this.year, date_end_this.month, 1) + \
+	relativedelta(weekday=MO(+1))
 date_start_next = date_end_this
 date_end_next = date_start_next + relativedelta(months=6)
-date_end_next = datetime.date(date_end_next.year, date_end_next.month, 1) + relativedelta(weekday=MO(+1))
+date_end_next = datetime.date(date_end_next.year, date_end_next.month, 1) + \
+	relativedelta(weekday=MO(+1))
 
 TEX_DOC_START = r'''
 \documentclass[a4paper, 12pt, landscape, ngerman]{scrartcl}
