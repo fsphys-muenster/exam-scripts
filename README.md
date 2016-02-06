@@ -56,6 +56,7 @@ zusammengeführt werden sollen, und muss einer der folgenden Werte sein:
 - `CP`
 - `Chemie`
 - `Informatik`
+- `PhysikA`
 
 Diese Information wird dazu verwendet, um Metadaten in die PDF-Datei zu schreiben.
 
