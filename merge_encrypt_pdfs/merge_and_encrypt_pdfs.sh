@@ -18,7 +18,10 @@ if [ -z ${1+x} ] || [ -z ${2+x} ] || [ -z ${3+x} ]; then
 	exit 0
 fi
 
+echo 'Führe PDF-Dateien zusammen...'
+
 # initialization
+error_msg='Ein Fehler ist aufgetreten!'
 input_dir=$1
 output_path=$2
 lecture=$3
@@ -105,54 +108,60 @@ case $lecture in
 		exit 1
 		;;
 esac
+# generate user PW using lecture name and current time
 user_pw="$lecture"'-'$(date '+%Y-%m-%dT%H:%M')
 
 "$sejda_path"sejda-console merge \
 	--bookmarks one_entry_each_doc \
-	--directory "$input_dir" --output "/tmp/$output_name"'_1.pdf'
+	--directory "$input_dir" --output "/tmp/$output_name"'_1.pdf' \
+	>/dev/null
 status=$?
 if [ $status -ne 0 ]; then
-	echo 'Ein Fehler ist aufgetreten!'
+	echo $error_msg
 	exit 1
 fi
 
-# Add FSPHYS logo stamp on background of every page in merged PDF file
+# add FSPHYS logo stamp on background of every page in merged PDF file
 pdftk "/tmp/$output_name"'_1.pdf' stamp 'FS_logo_stamp.pdf' output "/tmp/$output_name"
 status=$?
 rm "/tmp/$output_name"'_1.pdf'
 if [ $status -ne 0 ]; then
-	echo 'Ein Fehler ist aufgetreten!'
+	echo $error_msg
 	exit 1
 fi
 
-# Set metadata on merged (& stamped) PDF file
+# set metadata on merged (& stamped) PDF file
 "$sejda_path"sejda-console setmetadata \
 	--title "$lecture_title" \
 	--subject "$lecture_subject" \
 	--author "$lecture_author" \
 	--keywords "$lecture_keywords" \
 	--overwrite \
-	--files "/tmp/$output_name" --output "/tmp/$output_name"
+	--files "/tmp/$output_name" --output "/tmp/$output_name" \
+	>/dev/null
 status=$?
 if [ $status -ne 0 ]; then
-	echo 'Ein Fehler ist aufgetreten!'
+	echo $error_msg
 	exit 1
 fi
 
-# Encrypt merged PDF file (set user & admin PW)
+# encrypt merged PDF file (set user & admin PW)
 "$sejda_path"sejda-console encrypt \
 	--encryptionType aes_128 \
 	--allow print copy modifyannotations fill screenreaders assembly degradedprinting \
 	--userPassword "$user_pw" \
 	--administratorPassword "$admin_pw" \
-	--files "/tmp/$output_name" --output "$output_dir"
+	--files "/tmp/$output_name" --output "$output_dir" \
+	>/dev/null
 status=$?
 rm "/tmp/$output_name"
 if [ $status -ne 0 ]; then
-	echo 'Ein Fehler ist aufgetreten!'
+	echo $error_msg
+	echo "Eventuell kann auf den Pfad „$output_path“"
+	echo 'nicht zugegriffen werden oder die Datei existiert bereits.'
 	exit 1
 fi
 
-echo
+echo 'PDF-Dateien erfolgreich zusammengeführt!'
 echo 'User PW:' "$user_pw"
 
