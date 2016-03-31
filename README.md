@@ -29,11 +29,11 @@ sind FOSS; pdftk findet sich auch z. B. in den Ubuntu-Repositories.
 
 Das Skript muss wie folgt aufgerufen werden:
 
-    FS_merge_and_encrypt_pdfs.sh <eingabeordner> <ausgabepfad> <vorlesung> <admin-pw>
+    merge_and_encrypt_pdfs.sh <eingabeordner> <ausgabepfad> <vorlesung> <admin-pw>
 
 Beispiel:
 
-    FS_merge_and_encrypt_pdfs.sh ~/klausuren ~/Physik1.pdf Physik1 TEST-Passwort
+    merge_and_encrypt_pdfs.sh ~/klausuren ~/Physik1.pdf Physik1 TEST-Passwort
 
 `<eingabeordner>` ist der Pfad zu dem Ordner, in dem sich die PDF-Dateien
 befinden, die zusammengeführt werden sollen.
