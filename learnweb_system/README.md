@@ -9,8 +9,10 @@ Das Skript muss wie folgt aufgerufen werden:
 
     Protokoll-Skript.bat [Eingabeordner] [Admin-PW] [User-PW]
 	
-Parameter #1: Ordner der PDF-Dateien. Dieser Ordner sollte eine "meta.info"-Datei beinhalten! Falls keine Meta-Datei gefunden wurde wird ein allgemeiner Eintrag erzeugt.
+Parameter #1: Ordner der PDF-Dateien. Dieser Ordner sollte eine "meta.info"-Datei beinhalten! Falls keine Meta-Datei gefunden wurde wird ein allgemeiner Eintrag erzeugt. Ggf. muss der Ordner in "..." gesetzt werden, wenn dieser Anführungszeichen enthält.
+
 Parameter #2: Admin-PW der PDFs
+
 Parameter #3: User-PW der PDFs
 
 Die meta.info kann wie folgt aussehen:

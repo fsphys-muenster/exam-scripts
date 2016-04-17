@@ -14,7 +14,7 @@ ECHO                Falls keine Meta-Datei gefunden wurde wird ein allgemeiner E
 ECHO  Parameter #2: Admin-PW der PDFs
 ECHO  Parameter #3: User-PW der PDFs
 ECHO.
-ECHO  Alle Parameter werden ohne Leerzeichen angegeben! Die Ausgabe Erfolgt im Ordner "Protokoll-Skript-Ausgabe" des Ausfuehrungsortes.
+ECHO  Alle Parameter werden ohne Leerzeichen im Parameter selbst angegeben [der Eingabeordner kann ggf. mit "..." umschlossen werden]! Die Ausgabe Erfolgt im Ordner "Protokoll-Skript-Ausgabe" des Ausfuehrungsortes.
 ECHO.
 PAUSE
 GOTO:EOF
@@ -45,7 +45,7 @@ IF EXIST %1\meta.info (
  )
 
 ECHO Ausgabe erfolgt nach %cd%\Protokoll-Skript-Ausgabe\%~n1
-if exist "%cd%\Protokoll-Skript-Ausgabe\%~n1" del /q "%cd%\Protokoll-Skript-Ausgabe\%~n1\*.*"
+if exist "%cd%\Protokoll-Skript-Ausgabe\%~n1" del /q "%cd%\Protokoll-Skript-Ausgabe\%~n1\*.pdf"
 if not exist "%cd%\Protokoll-Skript-Ausgabe\%~n1" mkdir "%cd%\Protokoll-Skript-Ausgabe\%~n1"
 
 :: Copy and stamp PDFs
