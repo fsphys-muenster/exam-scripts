@@ -39,7 +39,7 @@ IF EXIST %1\meta.info (
 	ECHO Keine meta.info gefunden! Standardwerte werden verwendet!
 	ECHO.
 	SET title="Altprotokoll o. Altklausur am Fachbereich Physik der WWU"
-	SET author="Professoren des Fachbereichs Physik der WWU Muenster. Weitergabe nicht gestattet!"
+	SET author="Studierende oder Professoren des Fachbereichs Physik der WWU Muenster. Weitergabe nicht gestattet!"
 	SET subject="Protokoll o. Klausur"
 	SET keywords="Physik,Klausur,Protokoll,WWU Muenster"
  )
