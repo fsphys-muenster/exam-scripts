@@ -46,6 +46,7 @@ IF EXIST %1\meta.info (
 
 ECHO Ausgabe erfolgt nach %cd%\Protokoll-Skript-Ausgabe\%~n1
 if exist "%cd%\Protokoll-Skript-Ausgabe\%~n1" del /q "%cd%\Protokoll-Skript-Ausgabe\%~n1\*.pdf"
+if not exist "%cd%\Protokoll-Skript-Ausgabe" mkdir "%cd%\Protokoll-Skript-Ausgabe"
 if not exist "%cd%\Protokoll-Skript-Ausgabe\%~n1" mkdir "%cd%\Protokoll-Skript-Ausgabe\%~n1"
 
 :: Copy and stamp PDFs
