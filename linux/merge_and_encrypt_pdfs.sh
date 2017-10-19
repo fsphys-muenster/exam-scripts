@@ -275,6 +275,7 @@ status=$?
 rm "/tmp/$output_name"'_1.pdf'
 if [ $status -ne 0 ]; then
 	echo $error_msg
+	echo 'Ist die Datei „FS_logo_stamp.pdf“ vorhanden?'
 	exit 3
 fi
 
