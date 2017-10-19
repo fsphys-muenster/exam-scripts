@@ -1,33 +1,71 @@
 #!/bin/sh
-# Merges & encrypts the PDF files in the directory in #1; output file name in #2;
-#     lecture name in #3; admin PW in #4
+# Merges & encrypts the PDF files in the current directory
+#  output file name in #1; lecture/module name in #2; admin password in #3;
+#  user password in #4 (optional)
 
+# common initialization
 lecture_list=''
-for i in 'Physik1' 'Physik2' 'Physik3' 'Physik4' 'Physik5' 'Physik6' 'Mathe1' 'Mathe2' 'Mathe3' 'Mathe4' 'CP' 'Chemie' 'Informatik' 'PhysikA'; do
-	lecture_list="$lecture_list    $i\n"
+for x in 'Physik1' 'Physik2' 'Physik3' 'Physik4' 'Physik5' 'Physik6' 'Mathe1' \
+	'Mathe2' 'Mathe3' 'Mathe4' 'CP' 'Chemie' 'Informatik' 'PhysikA'; do
+	lecture_list="$lecture_list    $x\n"
 done
-# check if all required arguments are set
-if [ -z ${1+x} ] || [ -z ${2+x} ] || [ -z ${3+x} ]; then
-	echo 'Verwendung:'
+input_dir=.
+error_msg="\nEin Fehler ist aufgetreten!"
+# “encrypt” the default password
+user_pw_default='2ENZQXzT'
+
+# the parameters can either be set interactively or as arguments
+# if no arguments were given: ask interactively
+if [ $# -eq 0 ]; then
+	while [ -z "$output_path" ]; do
+		echo 'Bitte einen Pfad für die Ausgabedatei angeben:'
+		read output_path
+	done
+	while [ -z "$lecture" ]; do
+		echo 'Um welche Vorlesung/welches Modul geht es? Mögliche Werte:'
+		echo "$lecture_list"
+		read lecture
+	done
+	while [ -z "$admin_pw" ]; do
+		echo 'Bitte ein Administrator-Passwort für die PDF-Datei angeben:'
+		read admin_pw
+	done
+	echo 'Bitte ein Nutzer-Passwort für die PDF-Datei angeben (optional):'
+	read user_pw
 	echo
-	echo ' Parameter #1: Ordner, der die PDF-Dateien enthält'
-	echo ' Parameter #2: Pfad für die Ausgabedatei'
-	echo ' Parameter #3: Um welche Vorlesung geht es? Mögliche Werte:'
-	echo "$lecture_list"
-	echo ' Parameter #4: Admin-Passwort für die PDF-Datei'
-	exit 0
+# if there were arguments on the command line: validate and use these values
+else
+	# check if all required arguments are set
+	if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+		echo 'Verwendung:'
+		echo
+		echo ' Parameter #1: Pfad für die Ausgabedatei'
+		echo ' Parameter #2: Um welche Vorlesung geht es? Mögliche Werte:'
+		echo "$lecture_list"
+		echo ' Parameter #3: Admin-Passwort für die PDF-Datei'
+		echo ' Parameter #4: Nutzer-Passwort für die PDF-Datei (optional)'
+		echo
+		echo 'Alternativ kann auch auf die Angabe von Parametern verzichtet'
+		echo 'werden; diese werden dann interaktiv abgefragt.'
+		exit 1
+	fi
+
+	# initialization
+	output_path=$1
+	lecture=$2
+	admin_pw=$3
+	user_pw=$4
+fi
+
+# post-processing of parameters
+output_dir=$(dirname "$output_path")
+output_name=$(basename "$output_path")
+# use the default password if there was no user password given as argument
+if [ -z "$user_pw" ]; then
+	user_pw=$(echo "$user_pw_default" | tr '[A-Za-z]' '[N-ZA-Mn-za-m]')
 fi
 
 echo 'Führe PDF-Dateien zusammen…'
-
-# initialization
-error_msg='Ein Fehler ist aufgetreten!'
-input_dir=$1
-output_path=$2
-lecture=$3
-admin_pw=$4
-output_dir=$(dirname "$output_path")
-output_name=$(basename "$output_path")
 
 lecture_author='Professoren des FB Physik der WWU – Weitergabe nicht gestattet!'
 case $lecture in
@@ -102,15 +140,14 @@ case $lecture in
 		lecture_keywords='Physik, Klausur, Klausuren, Scans, Nebenfach'
 		;;
 	*)
-		echo 'Die Vorlesung "'"$lecture"'" ist nicht bekannt!'
+		echo 'Die Vorlesung/das Modul "'"$lecture"'" ist nicht bekannt!'
 		echo 'Mögliche Werte sind:'
 		echo "$lecture_list"
 		exit 1
 		;;
 esac
-# generate user PW using lecture name and current time
-user_pw="$lecture"'-'$(date '+%Y-%m-%dT%H:%M')
 
+# merge PDF files
 sejda-console merge \
 	--bookmarks one_entry_each_doc \
 	--directory "$input_dir" --output "/tmp/$output_name"'_1.pdf' \
@@ -118,7 +155,9 @@ sejda-console merge \
 status=$?
 if [ $status -ne 0 ]; then
 	echo $error_msg
-	exit 1
+	echo 'Die PDF-Dateien konnten nicht zusammengeführt werden – vielleicht ist'
+	echo 'eine der Dateien nicht lesbar?'
+	exit 2
 fi
 
 # add FSPHYS logo stamp on background of every page in merged PDF file
@@ -127,7 +166,7 @@ status=$?
 rm "/tmp/$output_name"'_1.pdf'
 if [ $status -ne 0 ]; then
 	echo $error_msg
-	exit 1
+	exit 3
 fi
 
 # set metadata on merged (& stamped) PDF file
@@ -142,7 +181,7 @@ sejda-console setmetadata \
 status=$?
 if [ $status -ne 0 ]; then
 	echo $error_msg
-	exit 1
+	exit 4
 fi
 
 # encrypt merged PDF file (set user & admin PW)
@@ -159,9 +198,12 @@ if [ $status -ne 0 ]; then
 	echo $error_msg
 	echo "Eventuell kann auf den Pfad „$output_path“"
 	echo 'nicht zugegriffen werden oder die Datei existiert bereits.'
-	exit 1
+	exit 5
 fi
 
+echo
 echo 'PDF-Dateien erfolgreich zusammengeführt!'
-echo 'User PW:' "$user_pw"
+echo 'Ausgabe-Datei:         ' "$output_path"
+echo 'Administrator-Passwort:' "$admin_pw"
+echo 'Nutzer-Passwort:       ' "$user_pw"
 
