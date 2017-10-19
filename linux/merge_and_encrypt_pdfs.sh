@@ -18,7 +18,7 @@ if [ -z ${1+x} ] || [ -z ${2+x} ] || [ -z ${3+x} ]; then
 	exit 0
 fi
 
-echo 'Führe PDF-Dateien zusammen...'
+echo 'Führe PDF-Dateien zusammen…'
 
 # initialization
 error_msg='Ein Fehler ist aufgetreten!'
@@ -111,7 +111,7 @@ esac
 # generate user PW using lecture name and current time
 user_pw="$lecture"'-'$(date '+%Y-%m-%dT%H:%M')
 
-"$sejda_path"sejda-console merge \
+sejda-console merge \
 	--bookmarks one_entry_each_doc \
 	--directory "$input_dir" --output "/tmp/$output_name"'_1.pdf' \
 	>/dev/null
@@ -131,7 +131,7 @@ if [ $status -ne 0 ]; then
 fi
 
 # set metadata on merged (& stamped) PDF file
-"$sejda_path"sejda-console setmetadata \
+sejda-console setmetadata \
 	--title "$lecture_title" \
 	--subject "$lecture_subject" \
 	--author "$lecture_author" \
@@ -146,7 +146,7 @@ if [ $status -ne 0 ]; then
 fi
 
 # encrypt merged PDF file (set user & admin PW)
-"$sejda_path"sejda-console encrypt \
+sejda-console encrypt \
 	--encryptionType aes_128 \
 	--allow print copy modifyannotations fill screenreaders assembly degradedprinting \
 	--userPassword "$user_pw" \

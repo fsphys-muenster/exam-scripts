@@ -2,15 +2,12 @@
  Scripts to merge and encrypt PDF files for past exams and oral exam
  transcripts on the [student council’s Learnweb course](https://sso.uni-muenster.de/LearnWeb/learnweb2/course/view.php?id=4789).
 
-
 ## [Linux](linux/)
 ### PDFs zusammenführen und verschlüsseln
 Das Skript ist ein Unix-Shell-Skript. Zur Verwendung müssen die Programme
 [pdftk](https://www.pdflabs.com/tools/pdftk-server) und
 [sejda](https://github.com/torakiki/sejda)
-installiert und über die Kommandozeile ausführbar sein. Für sejda kann auch
-alternativ die Umgebungsvariable `sejda_path` auf das Verzeichnis gesetzt
-werden, in dem sich die Programmdatei sejda-console befindet. Beide Programme
+installiert und über die Kommandozeile ausführbar sein. Beide Programme
 sind FOSS; pdftk findet sich auch z. B. in den Ubuntu-Repositories.
 
 Das Skript muss wie folgt aufgerufen werden:
