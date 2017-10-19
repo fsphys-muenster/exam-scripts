@@ -28,20 +28,36 @@ Beispiel:
 `<vorlesung-oder-modul>` soll die Art der Vorlesung bzw. der Name des Moduls
 sein, von der gerade Klausuren zusammengeführt werden sollen, und muss einer
 der folgenden Werte sein (Groß-/Kleinschreibung wird nicht beachtet):
-- `Physik1`
-- `Physik2`
-- `Physik3`
-- `Physik4`
-- `Physik5`
-- `Physik6`
-- `Mathe1`
-- `Mathe2`
-- `Mathe3`
-- `Mathe4`
-- `CP`
-- `Chemie`
-- `Informatik`
-- `PhysikA`
+- Klausuren:
+  - `Physik1`
+  - `Physik2`
+  - `Physik3`
+  - `Physik4`
+  - `Physik5`
+  - `Physik6`
+  - `Mathe1`
+  - `Mathe2`
+  - `Mathe3`
+  - `Mathe4`
+  - `CP`
+  - `Chemie`
+  - `Informatik`
+  - `PhysikA`
+- Mündliche Prüfungen im Bachelor:
+  - `QM-2FB`
+  - `Signalverarbeitung`
+  - `SdM`
+  - `QTSP`
+- Mündliche Prüfungen im Master (physikalische Vertiefungen):
+  - `Funktionale-Nanosysteme`
+  - `Kern-Teilchenphysik`
+  - `Materialphysik`
+  - `Nichtlineare-Physik`
+  - `Photonik-Magnonik`
+  - `Dimensionsreduzierte-Festkörper`
+- Mündliche Prüfungen im Master (fachübergreifende Studien):
+  - `Biophysik-MSc`
+  - `Geophysik-MSc`
 
 Diese Information wird dazu verwendet, um Metadaten in die PDF-Datei zu schreiben.
 

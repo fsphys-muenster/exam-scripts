@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+# [bash is only needed for read -e]
 # Merges & encrypts the PDF files in the current directory
 #  lecture/module name in #1; admin password in #2;
 #  user password in #3 (optional)
@@ -7,12 +8,23 @@ echo 'Linux-Skript zum Zusammenführen und Verschlüsseln von PDF-Dateien'
 
 # common initialization
 course_list=''
-for x in 'Physik1' 'Physik2' 'Physik3' 'Physik4' 'Physik5' 'Physik6' 'Mathe1' \
-	'Mathe2' 'Mathe3' 'Mathe4' 'CP' 'Chemie' 'Informatik' 'PhysikA'; do
-	course_list="$course_list    $x\n"
+for x in '--- Klausuren:' \
+	'Physik1' 'Physik2' 'Physik3' 'Physik4' 'Physik5' 'Physik6' 'Mathe1' \
+	'Mathe2' 'Mathe3' 'Mathe4' 'CP' 'Chemie' 'Informatik' 'PhysikA' \
+	'--- Mündliche Prüfungen im Bachelor:'\
+	'QM-2FB' 'Signalverarbeitung' 'SdM' 'QTSP' \
+	'--- Mündliche Prüfungen im Master (physikalische Vertiefungen):' \
+	'Funktionale-Nanosysteme' 'Kern-Teilchenphysik' 'Materialphysik' \
+	'Nichtlineare-Physik' 'Photonik-Magnonik' 'Dimensionsreduzierte-Festkörper' \
+	'--- Mündliche Prüfungen im Master (fachübergreifende Studien):' \
+	'Biophysik-MSc' 'Geophysik-MSc'
+do
+	course_list="$course_list    $x
+"
 done
 input_dir=.
-error_msg="\nEin Fehler ist aufgetreten!"
+error_msg='
+Ein Fehler ist aufgetreten!'
 # “encrypted” default password
 user_pw_default='2ENZQXzT'
 
@@ -22,14 +34,14 @@ if [ $# -eq 0 ]; then
 	while [ -z "$course" ]; do
 		echo 'Um welche Vorlesung/welches Modul geht es? Mögliche Werte:'
 		echo "$course_list"
-		read course
+		read -er course
 	done
 	while [ -z "$admin_pw" ]; do
 		echo 'Bitte ein Administrator-Passwort für die PDF-Datei angeben:'
-		read admin_pw
+		read -er admin_pw
 	done
 	echo 'Bitte ein Nutzer-Passwort für die PDF-Datei angeben (optional):'
-	read user_pw
+	read -er user_pw
 	echo
 # if there were arguments on the command line: validate and use these values
 else
@@ -62,85 +74,184 @@ if [ -z "$user_pw" ]; then
 	user_pw=$(echo "$user_pw_default" | tr '[A-Za-z]' '[N-ZA-Mn-za-m]')
 fi
 
-echo 'Führe PDF-Dateien zusammen…'
+echo 'Führe PDF-Dateien im aktuellen Ordner zusammen…'
 
-course_author='Professoren des FB Physik der WWU – Weitergabe nicht gestattet!'
+lecture_author='Professoren des Fachbereichs Physik der WWU Münster – Weitergabe nicht gestattet!'
+transcript_author='Studierende des Fachbereichs Physik der WWU Münster – Weitergabe nicht gestattet!'
 case $(echo "$course" | tr '[:upper:]' '[:lower:]') in
-	'physik1')
+	# lectures
+	physik1)
 		course_title='Altklausuren zu Physik I'
 		course_subject='Physik I: Dynamik der Teilchen und Teilchensysteme'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Mechanik'
+		course_author="$lecture_author"
 		;;
-	'physik2')
+	physik2)
 		course_title='Altklausuren zu Physik II'
 		course_subject='Physik II: Thermodynamik und Elektromagnetismus'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Thermodynamik, Elektromagnetismus'
+		course_author="$lecture_author"
 		;;
-	'physik3')
+	physik3)
 		course_title='Altklausuren zu Physik III'
 		course_subject='Physik III: Wellen und Quanten'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Elektrodynamik'
+		course_author="$lecture_author"
 		;;
-	'physik4')
+	physik4)
 		course_title='Altklausuren zu Physik IV'
 		course_subject='Atom- und Quantenphysik'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Quantenmechanik, Atomphysik'
+		course_author="$lecture_author"
 		;;
-	'physik5')
+	physik5)
 		course_title='Altklausuren zu Physik V'
 		course_subject='Physik V: Quantentheorie'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Quantentheorie'
+		course_author="$lecture_author"
 		;;
-	'physik6')
+	physik6)
 		course_title='Altklausuren zu Physik VI'
 		course_subject='Physik VI: Statistische Physik'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Statistische Physik'
+		course_author="$lecture_author"
 		;;
-	'mathe1')
+	mathe1)
 		course_title='Altklausuren zu Mathematik für Physiker I'
 		course_subject='Grundlagen der Mathematik: Mathematik für Physiker I'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Analysis'
+		course_author="$lecture_author"
 		;;
-	'mathe2')
+	mathe2)
 		course_title='Altklausuren zu Mathematik für Physiker II'
 		course_subject='Grundlagen der Mathematik: Mathematik für Physiker II'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Lineare Algebra'
+		course_author="$lecture_author"
 		;;
-	'mathe3')
+	mathe3)
 		course_title='Altklausuren zu Mathematik für Physiker III'
 		course_subject='Integrationstheorie'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Integrationstheorie'
+		course_author="$lecture_author"
 		;;
-	'mathe4')
+	mathe4)
 		course_title='Altklausuren zu Mathematik für Physiker IV'
 		course_subject='Mathematik für Physiker IV'
 		course_keywords='Physik, Klausur, Klausuren, Scans'
+		course_author="$lecture_author"
 		;;
-	'cp')
+	cp)
 		course_title='Altklausuren zu Computational Physics'
 		course_subject='Computational Physics: Einführung in das wissenschaftliche Programmieren'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Fortran'
+		course_author="$lecture_author"
 		;;
-	'chemie')
+	chemie)
 		course_title='Altklausuren zu Chemie (Fachübergreifende Studien)'
 		course_subject='Chemie für Physiker'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Chemie'
+		course_author="Professoren des Fachbereichs Chemie/Pharmazie der WWU Münster – Weitergabe nicht gestattet!"
 		;;
-	'informatik')
+	informatik)
 		course_title='Altklausuren zu Informatik (Fachübergreifende Studien)'
 		course_subject='Informatik'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Informatik'
+		course_author="Professoren des Fachbereichs Mathematik/Informatik der WWU Münster – Weitergabe nicht gestattet!"
 		;;
-	'physika')
+	physika)
 		course_title='Altklausuren zu Physik A'
 		course_subject='Physik A: Physik für Naturwissenschaftler'
 		course_keywords='Physik, Klausur, Klausuren, Scans, Nebenfach'
+		course_author="$lecture_author"
 		;;
+	# oral exams
+	# bachelor
+	qm-2fb)
+		course_title='Prüfungsprotokolle zum Modul „Atom- und Quantenphysik“'
+		course_subject='Atom- und Quantenphysik'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Quantenmechanik, Atomphysik'
+		course_author="$transcript_author"
+	;;
+	signalverarbeitung)
+		course_title='Prüfungsprotokolle zum Modul „Messtechnik und Signalverarbeitung“'
+		course_subject='Messtechnik und Signalverarbeitung'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Messtechnik, Signalverarbeitung'
+		course_author="$transcript_author"
+	;;
+	sdm)
+		course_title='Prüfungsprotokolle zum Modul „Struktur der Materie“'
+		course_subject='Struktur der Materie'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Materie, Kernphysik, Teilchenphysik, Festkörperphysik'
+		course_author="$transcript_author"
+	;;
+	qtsp)
+		course_title='Prüfungsprotokolle zum Modul „Quantentheorie und statistische Physik“'
+		course_subject='Quantentheorie und statistische Physik'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Quantentheorie, statistische Physik'
+		course_author="$transcript_author"
+	;;
+	# master
+	funktionale-nanosysteme)
+		course_title='Prüfungsprotokolle zum Modul „Funktionale Nanosysteme“'
+		course_subject='Physikalische Vertiefung: Funktionale Nanosysteme'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Nanophysik, Nanosysteme'
+		course_author="$transcript_author"
+	;;
+	kern-teilchenphysik)
+		course_title='Prüfungsprotokolle zum Modul „Kern- und Teilchenphysik“'
+		course_subject='Physikalische Vertiefung: Kern- und Teilchenphysik'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Kernphysik, Teilchenphysik, Elementarteilchen'
+		course_author="$transcript_author"
+	;;
+	materialphysik)
+		course_title='Prüfungsprotokolle zum Modul „Materialphysik“'
+		course_subject='Physikalische Vertiefung: Materialphysik'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Materialphysik'
+		course_author="$transcript_author"
+	;;
+	nichtlineare-physik)
+		course_title='Prüfungsprotokolle zum Modul „Nichtlineare Physik“'
+		course_subject='Physikalische Vertiefung: Nichtlineare Physik'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, nichtlinear'
+		course_author="$transcript_author"
+	;;
+	photonik-magnonik)
+		course_title='Prüfungsprotokolle zum Modul „Photonik und Magnonik“'
+		course_subject='Physikalische Vertiefung: Photonik und Magnonik'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Photonik, Magnonik'
+		course_author="$transcript_author"
+	;;
+	dimensionsreduzierte-festkörper)
+		course_title='Prüfungsprotokolle zum Modul „Physik dimensionsreduzierter Festkörper“'
+		course_subject='Physikalische Vertiefung: Physik dimensionsreduzierter Festkörper'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, dimensionsreduzierte Festkörper'
+		course_author="$transcript_author"
+	;;
+	# minor (master)
+	biophysik-msc)
+		course_title='Prüfungsprotokolle zum Modul „Fachübergreifende Studien: Biophysik“'
+		course_subject='Fachübergreifende Studien: Biophysik'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Biophysik'
+		course_author="$transcript_author"
+	;;
+	geophysik-msc)
+		course_title='Prüfungsprotokolle zum Modul „Fachübergreifende Studien: Geophysik“'
+		course_subject='Fachübergreifende Studien: Geophysik'
+		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Geophysik'
+		course_author="$transcript_author"
+	;;
+	# default
 	*)
-		echo "Die Vorlesung/das Modul „${lecture}“ ist nicht bekannt!"
+		echo "Achtung: Die Vorlesung/das Modul „${course}“ ist nicht bekannt!"
 		echo 'Mögliche Werte sind:'
 		echo "$course_list"
-		exit 1
+		echo 'Für die Metadaten der PDF-Datei werden generische Werte eingesetzt.'
+		echo
+
+		course_title='Altklausur/Prüfungsprotokoll am Fachbereich Physik der WWU Münster'
+		course_subject='Klausur/Prüfungsprotokoll'
+		course_keywords='Physik, Klausur, Klausuren, Protokoll, WWU Münster'
+		course_author='Studierende oder Professoren des Fachbereichs Physik der WWU Münster – Weitergabe nicht gestattet!'
 		;;
 esac
 
