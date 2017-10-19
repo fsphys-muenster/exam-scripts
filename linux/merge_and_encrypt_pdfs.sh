@@ -1,30 +1,28 @@
 #!/bin/sh
 # Merges & encrypts the PDF files in the current directory
-#  output file name in #1; lecture/module name in #2; admin password in #3;
-#  user password in #4 (optional)
+#  lecture/module name in #1; admin password in #2;
+#  user password in #3 (optional)
+
+echo 'Linux-Skript zum Zusammenführen und Verschlüsseln von PDF-Dateien'
 
 # common initialization
-lecture_list=''
+course_list=''
 for x in 'Physik1' 'Physik2' 'Physik3' 'Physik4' 'Physik5' 'Physik6' 'Mathe1' \
 	'Mathe2' 'Mathe3' 'Mathe4' 'CP' 'Chemie' 'Informatik' 'PhysikA'; do
-	lecture_list="$lecture_list    $x\n"
+	course_list="$course_list    $x\n"
 done
 input_dir=.
 error_msg="\nEin Fehler ist aufgetreten!"
-# “encrypt” the default password
+# “encrypted” default password
 user_pw_default='2ENZQXzT'
 
 # the parameters can either be set interactively or as arguments
 # if no arguments were given: ask interactively
 if [ $# -eq 0 ]; then
-	while [ -z "$output_path" ]; do
-		echo 'Bitte einen Pfad für die Ausgabedatei angeben:'
-		read output_path
-	done
-	while [ -z "$lecture" ]; do
+	while [ -z "$course" ]; do
 		echo 'Um welche Vorlesung/welches Modul geht es? Mögliche Werte:'
-		echo "$lecture_list"
-		read lecture
+		echo "$course_list"
+		read course
 	done
 	while [ -z "$admin_pw" ]; do
 		echo 'Bitte ein Administrator-Passwort für die PDF-Datei angeben:'
@@ -36,28 +34,27 @@ if [ $# -eq 0 ]; then
 # if there were arguments on the command line: validate and use these values
 else
 	# check if all required arguments are set
-	if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+	if [ -z "$1" ] || [ -z "$2" ]; then
 		echo 'Verwendung:'
+		echo '    Ohne Parameter aufrufen für interaktive Nutzung'
+		echo '  oder'
+		echo '    merge_and_encrypt_pdfs.sh <vorlesung-oder-modul> <admin-pw> [nutzer-pw]'
 		echo
-		echo ' Parameter #1: Pfad für die Ausgabedatei'
-		echo ' Parameter #2: Um welche Vorlesung geht es? Mögliche Werte:'
-		echo "$lecture_list"
-		echo ' Parameter #3: Admin-Passwort für die PDF-Datei'
-		echo ' Parameter #4: Nutzer-Passwort für die PDF-Datei (optional)'
-		echo
-		echo 'Alternativ kann auch auf die Angabe von Parametern verzichtet'
-		echo 'werden; diese werden dann interaktiv abgefragt.'
+		echo ' Parameter #1: Um welche Vorlesung/welches Modul geht es? Mögliche Werte:'
+		echo "$course_list"
+		echo ' Parameter #2: Admin-Passwort für die PDF-Datei'
+		echo ' Parameter #3: Nutzer-Passwort für die PDF-Datei (optional)'
 		exit 1
 	fi
 
 	# initialization
-	output_path=$1
-	lecture=$2
-	admin_pw=$3
-	user_pw=$4
+	course=$1
+	admin_pw=$2
+	user_pw=$3
 fi
 
 # post-processing of parameters
+output_path="${course}_$(date '+%H-%m-%S').pdf"
 output_dir=$(dirname "$output_path")
 output_name=$(basename "$output_path")
 # use the default password if there was no user password given as argument
@@ -67,82 +64,82 @@ fi
 
 echo 'Führe PDF-Dateien zusammen…'
 
-lecture_author='Professoren des FB Physik der WWU – Weitergabe nicht gestattet!'
-case $lecture in
-	'Physik1')
-		lecture_title='Altklausuren zu Physik I'
-		lecture_subject='Physik I: Dynamik der Teilchen und Teilchensysteme'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Mechanik'
+course_author='Professoren des FB Physik der WWU – Weitergabe nicht gestattet!'
+case $(echo "$course" | tr '[:upper:]' '[:lower:]') in
+	'physik1')
+		course_title='Altklausuren zu Physik I'
+		course_subject='Physik I: Dynamik der Teilchen und Teilchensysteme'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Mechanik'
 		;;
-	'Physik2')
-		lecture_title='Altklausuren zu Physik II'
-		lecture_subject='Physik II: Thermodynamik und Elektromagnetismus'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Thermodynamik, Elektromagnetismus'
+	'physik2')
+		course_title='Altklausuren zu Physik II'
+		course_subject='Physik II: Thermodynamik und Elektromagnetismus'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Thermodynamik, Elektromagnetismus'
 		;;
-	'Physik3')
-		lecture_title='Altklausuren zu Physik III'
-		lecture_subject='Physik III: Wellen und Quanten'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Elektrodynamik'
+	'physik3')
+		course_title='Altklausuren zu Physik III'
+		course_subject='Physik III: Wellen und Quanten'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Elektrodynamik'
 		;;
-	'Physik4')
-		lecture_title='Altklausuren zu Physik IV'
-		lecture_subject='Atom- und Quantenphysik'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Quantenmechanik, Atomphysik'
+	'physik4')
+		course_title='Altklausuren zu Physik IV'
+		course_subject='Atom- und Quantenphysik'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Quantenmechanik, Atomphysik'
 		;;
-	'Physik5')
-		lecture_title='Altklausuren zu Physik V'
-		lecture_subject='Physik V: Quantentheorie'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Quantentheorie'
+	'physik5')
+		course_title='Altklausuren zu Physik V'
+		course_subject='Physik V: Quantentheorie'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Quantentheorie'
 		;;
-	'Physik6')
-		lecture_title='Altklausuren zu Physik VI'
-		lecture_subject='Physik VI: Statistische Physik'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Statistische Physik'
+	'physik6')
+		course_title='Altklausuren zu Physik VI'
+		course_subject='Physik VI: Statistische Physik'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Statistische Physik'
 		;;
-	'Mathe1')
-		lecture_title='Altklausuren zu Mathematik für Physiker I'
-		lecture_subject='Grundlagen der Mathematik: Mathematik für Physiker I'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Analysis'
+	'mathe1')
+		course_title='Altklausuren zu Mathematik für Physiker I'
+		course_subject='Grundlagen der Mathematik: Mathematik für Physiker I'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Analysis'
 		;;
-	'Mathe2')
-		lecture_title='Altklausuren zu Mathematik für Physiker II'
-		lecture_subject='Grundlagen der Mathematik: Mathematik für Physiker II'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Lineare Algebra'
+	'mathe2')
+		course_title='Altklausuren zu Mathematik für Physiker II'
+		course_subject='Grundlagen der Mathematik: Mathematik für Physiker II'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Lineare Algebra'
 		;;
-	'Mathe3')
-		lecture_title='Altklausuren zu Mathematik für Physiker III'
-		lecture_subject='Integrationstheorie'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Integrationstheorie'
+	'mathe3')
+		course_title='Altklausuren zu Mathematik für Physiker III'
+		course_subject='Integrationstheorie'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Integrationstheorie'
 		;;
-	'Mathe4')
-		lecture_title='Altklausuren zu Mathematik für Physiker IV'
-		lecture_subject='Mathematik für Physiker IV'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans'
+	'mathe4')
+		course_title='Altklausuren zu Mathematik für Physiker IV'
+		course_subject='Mathematik für Physiker IV'
+		course_keywords='Physik, Klausur, Klausuren, Scans'
 		;;
-	'CP')
-		lecture_title='Altklausuren zu Computational Physics'
-		lecture_subject='Computational Physics: Einführung in das wissenschaftliche Programmieren'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Fortran'
+	'cp')
+		course_title='Altklausuren zu Computational Physics'
+		course_subject='Computational Physics: Einführung in das wissenschaftliche Programmieren'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Fortran'
 		;;
-	'Chemie')
-		lecture_title='Altklausuren zu Chemie (Fachübergreifende Studien)'
-		lecture_subject='Chemie für Physiker'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Chemie'
+	'chemie')
+		course_title='Altklausuren zu Chemie (Fachübergreifende Studien)'
+		course_subject='Chemie für Physiker'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Chemie'
 		;;
-	'Informatik')
-		lecture_title='Altklausuren zu Informatik (Fachübergreifende Studien)'
-		lecture_subject='Informatik'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Informatik'
+	'informatik')
+		course_title='Altklausuren zu Informatik (Fachübergreifende Studien)'
+		course_subject='Informatik'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Informatik'
 		;;
-	'PhysikA')
-		lecture_title='Altklausuren zu Physik A'
-		lecture_subject='Physik A: Physik für Naturwissenschaftler'
-		lecture_keywords='Physik, Klausur, Klausuren, Scans, Nebenfach'
+	'physika')
+		course_title='Altklausuren zu Physik A'
+		course_subject='Physik A: Physik für Naturwissenschaftler'
+		course_keywords='Physik, Klausur, Klausuren, Scans, Nebenfach'
 		;;
 	*)
-		echo 'Die Vorlesung/das Modul "'"$lecture"'" ist nicht bekannt!'
+		echo "Die Vorlesung/das Modul „${lecture}“ ist nicht bekannt!"
 		echo 'Mögliche Werte sind:'
-		echo "$lecture_list"
+		echo "$course_list"
 		exit 1
 		;;
 esac
@@ -150,7 +147,8 @@ esac
 # merge PDF files
 sejda-console merge \
 	--bookmarks one_entry_each_doc \
-	--directory "$input_dir" --output "/tmp/$output_name"'_1.pdf' \
+	--directory "$input_dir" --matchingRegEx '(?i)(?!^FS_logo_stamp.pdf$).*' \
+	--output "/tmp/$output_name"'_1.pdf' \
 	>/dev/null
 status=$?
 if [ $status -ne 0 ]; then
@@ -171,10 +169,10 @@ fi
 
 # set metadata on merged (& stamped) PDF file
 sejda-console setmetadata \
-	--title "$lecture_title" \
-	--subject "$lecture_subject" \
-	--author "$lecture_author" \
-	--keywords "$lecture_keywords" \
+	--title "$course_title" \
+	--subject "$course_subject" \
+	--author "$course_author" \
+	--keywords "$course_keywords" \
 	--overwrite \
 	--files "/tmp/$output_name" --output "/tmp/$output_name" \
 	>/dev/null
@@ -203,7 +201,7 @@ fi
 
 echo
 echo 'PDF-Dateien erfolgreich zusammengeführt!'
-echo 'Ausgabe-Datei:         ' "$output_path"
-echo 'Administrator-Passwort:' "$admin_pw"
-echo 'Nutzer-Passwort:       ' "$user_pw"
+echo "Ausgabe-Datei:           $output_path"
+echo "Administrator-Passwort:  $admin_pw"
+echo "Nutzer-Passwort:         $user_pw"
 

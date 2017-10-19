@@ -10,22 +10,24 @@ Das Skript ist ein Unix-Shell-Skript. Zur Verwendung müssen die Programme
 installiert und über die Kommandozeile ausführbar sein. Beide Programme
 sind FOSS; pdftk findet sich auch z. B. in den Ubuntu-Repositories.
 
-Das Skript muss wie folgt aufgerufen werden:
+Am einfachsten ist es, das Skript ohne Angabe von Parametern auszuführen. Die
+erforderlichen Angaben werden dann interaktiv erfragt.
 
-    merge_and_encrypt_pdfs.sh <eingabeordner> <ausgabepfad> <vorlesung> <admin-pw>
+---
+
+Es ist auch möglich, die Angaben für das Skript als Parameter auf der
+Kommandozeile zu übergeben. In diesem Fall muss das Skript wie folgt aufgerufen
+werden:
+
+    merge_and_encrypt_pdfs.sh <vorlesung-oder-modul> <admin-pw> [nutzer-pw]
 
 Beispiel:
 
-    merge_and_encrypt_pdfs.sh ~/klausuren ~/Physik1.pdf Physik1 TEST-Passwort
+    merge_and_encrypt_pdfs.sh Physik1 TEST-Admin-Passwort
 
-`<eingabeordner>` ist der Pfad zu dem Ordner, in dem sich die PDF-Dateien
-befinden, die zusammengeführt werden sollen.
-
-`<ausgabepfad>` ist der Pfad, zu dem die fertige zusammengeführte PDF-Dattei
-ausgegeben werden soll.
-
-`<vorlesung>` soll die Art der Vorlesung sein, von der gerade Klausuren
-zusammengeführt werden sollen, und muss einer der folgenden Werte sein:
+`<vorlesung-oder-modul>` soll die Art der Vorlesung bzw. der Name des Moduls
+sein, von der gerade Klausuren zusammengeführt werden sollen, und muss einer
+der folgenden Werte sein (Groß-/Kleinschreibung wird nicht beachtet):
 - `Physik1`
 - `Physik2`
 - `Physik3`
@@ -43,11 +45,16 @@ zusammengeführt werden sollen, und muss einer der folgenden Werte sein:
 
 Diese Information wird dazu verwendet, um Metadaten in die PDF-Datei zu schreiben.
 
-`<admin-pw>` ist ist das Admin-Passwort für die PDF-Datei. Dieses sollte nicht
+`<admin-pw>` ist das Admin-Passwort für die PDF-Datei. Dieses sollte nicht
 weitergegeben werden.
 
-Das Passwort zum Anzeigen der PDF-Datei wird automatisch generiert und am Ende
-ausgegeben.
+`[nutzer-pw]` ist das Passwort zum Anzeigen der PDF-Datei. Die Angabe ist
+*optional*; wird hier nichts angegeben, wird ein Standard-Passwort verwendet und
+am Ende ausgegeben.
+
+Für die Ein- und Ausgabe wird der Ordner verwendet, von dem aus das Skript
+ausgeführt wird. Am besten kann man also das Skript in den Ordner mit den
+Dateien kopieren, die man bearbeiten möchte, und von dort aus ausführen.
 
 ## [Windows](windows/)
 ### Protokoll-Script (Windows)
