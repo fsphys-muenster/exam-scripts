@@ -71,7 +71,7 @@ output_dir=$(dirname "$output_path")
 output_name=$(basename "$output_path")
 # use the default password if there was no user password given as argument
 if [ -z "$user_pw" ]; then
-	user_pw=$(echo "$user_pw_default" | tr '[A-Za-z]' '[N-ZA-Mn-za-m]')
+	user_pw=$(echo "$user_pw_default" | tr 'A-Za-z' 'N-ZA-Mn-za-m')
 fi
 
 echo 'Führe PDF-Dateien im aktuellen Ordner zusammen…'
@@ -171,75 +171,75 @@ case $(echo "$course" | tr '[:upper:]' '[:lower:]') in
 		course_subject='Atom- und Quantenphysik'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Quantenmechanik, Atomphysik'
 		course_author="$transcript_author"
-	;;
+		;;
 	signalverarbeitung)
 		course_title='Prüfungsprotokolle zum Modul „Messtechnik und Signalverarbeitung“'
 		course_subject='Messtechnik und Signalverarbeitung'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Messtechnik, Signalverarbeitung'
 		course_author="$transcript_author"
-	;;
+		;;
 	sdm)
 		course_title='Prüfungsprotokolle zum Modul „Struktur der Materie“'
 		course_subject='Struktur der Materie'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Materie, Kernphysik, Teilchenphysik, Festkörperphysik'
 		course_author="$transcript_author"
-	;;
+		;;
 	qtsp)
 		course_title='Prüfungsprotokolle zum Modul „Quantentheorie und statistische Physik“'
 		course_subject='Quantentheorie und statistische Physik'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Quantentheorie, statistische Physik'
 		course_author="$transcript_author"
-	;;
+		;;
 	# master
 	funktionale-nanosysteme)
 		course_title='Prüfungsprotokolle zum Modul „Funktionale Nanosysteme“'
 		course_subject='Physikalische Vertiefung: Funktionale Nanosysteme'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Nanophysik, Nanosysteme'
 		course_author="$transcript_author"
-	;;
+		;;
 	kern-teilchenphysik)
 		course_title='Prüfungsprotokolle zum Modul „Kern- und Teilchenphysik“'
 		course_subject='Physikalische Vertiefung: Kern- und Teilchenphysik'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Kernphysik, Teilchenphysik, Elementarteilchen'
 		course_author="$transcript_author"
-	;;
+		;;
 	materialphysik)
 		course_title='Prüfungsprotokolle zum Modul „Materialphysik“'
 		course_subject='Physikalische Vertiefung: Materialphysik'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Materialphysik'
 		course_author="$transcript_author"
-	;;
+		;;
 	nichtlineare-physik)
 		course_title='Prüfungsprotokolle zum Modul „Nichtlineare Physik“'
 		course_subject='Physikalische Vertiefung: Nichtlineare Physik'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, nichtlinear'
 		course_author="$transcript_author"
-	;;
+		;;
 	photonik-magnonik)
 		course_title='Prüfungsprotokolle zum Modul „Photonik und Magnonik“'
 		course_subject='Physikalische Vertiefung: Photonik und Magnonik'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Photonik, Magnonik'
 		course_author="$transcript_author"
-	;;
+		;;
 	dimensionsreduzierte-festkörper)
 		course_title='Prüfungsprotokolle zum Modul „Physik dimensionsreduzierter Festkörper“'
 		course_subject='Physikalische Vertiefung: Physik dimensionsreduzierter Festkörper'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, dimensionsreduzierte Festkörper'
 		course_author="$transcript_author"
-	;;
+		;;
 	# minor (master)
 	biophysik-msc)
 		course_title='Prüfungsprotokolle zum Modul „Fachübergreifende Studien: Biophysik“'
 		course_subject='Fachübergreifende Studien: Biophysik'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Biophysik'
 		course_author="$transcript_author"
-	;;
+		;;
 	geophysik-msc)
 		course_title='Prüfungsprotokolle zum Modul „Fachübergreifende Studien: Geophysik“'
 		course_subject='Fachübergreifende Studien: Geophysik'
 		course_keywords='Physik, Prüfung, mündlich, Protokoll, Master, Geophysik'
 		course_author="$transcript_author"
-	;;
+		;;
 	# default
 	*)
 		echo "Achtung: Die Vorlesung/das Modul „${course}“ ist nicht bekannt!"
