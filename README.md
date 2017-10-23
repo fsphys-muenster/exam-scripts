@@ -19,7 +19,7 @@ Es ist auch möglich, die Angaben für das Skript als Parameter auf der
 Kommandozeile zu übergeben. In diesem Fall muss das Skript wie folgt aufgerufen
 werden:
 
-    merge_and_encrypt_pdfs.sh <vorlesung-oder-modul> <admin-pw> [nutzer-pw]
+    merge_and_encrypt_pdfs.sh <vorlesung-oder-modul> [admin-pw] [nutzer-pw]
 
 Beispiel:
 
@@ -61,8 +61,9 @@ der folgenden Werte sein (Groß-/Kleinschreibung wird nicht beachtet):
 
 Diese Information wird dazu verwendet, um Metadaten in die PDF-Datei zu schreiben.
 
-`<admin-pw>` ist das Admin-Passwort für die PDF-Datei. Dieses sollte nicht
-weitergegeben werden.
+`[admin-pw]` ist das Administrator-Passwort für die PDF-Datei. Dieses sollte
+nicht weitergegeben werden. Wenn kein Administrator-Passwort angegeben wird, wird
+zufällig eines erzeugt und am Ende ausgegeben.
 
 `[nutzer-pw]` ist das Passwort zum Anzeigen der PDF-Datei. Die Angabe ist
 *optional*; wird hier nichts angegeben, wird ein Standard-Passwort verwendet und

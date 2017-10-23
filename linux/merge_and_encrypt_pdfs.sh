@@ -1,7 +1,7 @@
 #!/bin/bash
 # [bash is only needed for read -e]
 # Merges & encrypts the PDF files in the current directory
-#  lecture/module name in #1; admin password in #2;
+#  lecture/module name in #1; admin password in #2 (optional);
 #  user password in #3 (optional)
 
 echo 'Linux-Skript zum Zusammenführen und Verschlüsseln von PDF-Dateien'
@@ -36,17 +36,16 @@ if [ $# -eq 0 ]; then
 		echo "$course_list"
 		read -er course
 	done
-	while [ -z "$admin_pw" ]; do
-		echo 'Bitte ein Administrator-Passwort für die PDF-Datei angeben:'
-		read -er admin_pw
-	done
+	echo 'Bitte ein Administrator-Passwort für die PDF-Datei angeben (optional):'
+	read -er admin_pw
 	echo 'Bitte ein Nutzer-Passwort für die PDF-Datei angeben (optional):'
 	read -er user_pw
 	echo
 # if there were arguments on the command line: validate and use these values
 else
-	# check if all required arguments are set
-	if [ -z "$1" ] || [ -z "$2" ]; then
+	# check if all required arguments are set and the correct number of
+	# arguments is present
+	if [ -z "$1" ] || [ $# -gt 3 ]; then
 		echo 'Verwendung:'
 		echo '    Ohne Parameter aufrufen für interaktive Nutzung'
 		echo '  oder'
@@ -54,22 +53,26 @@ else
 		echo
 		echo ' Parameter #1: Um welche Vorlesung/welches Modul geht es? Mögliche Werte:'
 		echo "$course_list"
-		echo ' Parameter #2: Admin-Passwort für die PDF-Datei'
+		echo ' Parameter #2: Admin-Passwort für die PDF-Datei (optional)'
 		echo ' Parameter #3: Nutzer-Passwort für die PDF-Datei (optional)'
 		exit 1
 	fi
 
 	# initialization
-	course=$1
-	admin_pw=$2
-	user_pw=$3
+	course="$1"
+	admin_pw="$2"
+	user_pw="$3"
 fi
 
 # post-processing of parameters
 output_path="${course}_$(date '+%H-%m-%S').pdf"
 output_dir=$(dirname "$output_path")
 output_name=$(basename "$output_path")
-# use the default password if there was no user password given as argument
+# generate a random password if no admin password was given
+if [ -z "$admin_pw" ]; then
+	admin_pw=$(pwgen 8 1)
+fi
+# use the default password if there was no user password given
 if [ -z "$user_pw" ]; then
 	user_pw=$(echo "$user_pw_default" | tr 'A-Za-z' 'N-ZA-Mn-za-m')
 fi
